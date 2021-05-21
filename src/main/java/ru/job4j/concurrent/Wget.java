@@ -8,12 +8,10 @@ public class Wget {
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
                         }
                         System.out.print("\rLoading : " + i  + "%");
                     }});
-
         first.start();
-
     }
 }
