@@ -5,7 +5,7 @@ public final class Cache {
 
     public static Cache instOf() {
        if (cache == null) {
-           synchronized ("") {
+           synchronized (Cache.class) {
                if (cache == null) {
                    cache = new Cache();
                }
