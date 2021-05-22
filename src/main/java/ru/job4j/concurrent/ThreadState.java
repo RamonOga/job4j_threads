@@ -11,13 +11,10 @@ public class ThreadState {
 
         first.start();
         second.start();
-        while (true) {
-            if (first.getState() != Thread.State.TERMINATED && second.getState() != Thread.State.TERMINATED) {
-                System.out.println("Please wait, work in progress");
-            } else {
-                System.out.println("Work completed ");
-                break;
-            }
+        while (first.getState() != Thread.State.TERMINATED
+                && second.getState() != Thread.State.TERMINATED) {
+            System.out.println("Working..");
+             }
+        System.out.println("Work completed ");
        }
     }
-}
