@@ -4,8 +4,9 @@ public final class Cache {
     private static Cache cache;
 
     public static Cache instOf() {
+        Object monitor = new Object();
        if (cache == null) {
-           synchronized (Cache.class) {
+           synchronized (monitor) {
                if (cache == null) {
                    cache = new Cache();
                }
