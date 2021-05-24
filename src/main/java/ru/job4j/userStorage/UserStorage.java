@@ -3,37 +3,36 @@ package ru.job4j.userStorage;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @ThreadSafe
 public class UserStorage implements Storage {
     @GuardedBy("this")
-    List<User> users;
-    public UserStorage(List<User> users) {
+    Map<Integer, User> users;
+    public UserStorage(Map<Integer, User> users) {
         this.users = users;
     }
 
     @Override
     public synchronized boolean add(User user) {
-        return users.add(user);
+        return users.put(user.getId(), user) == null;
     }
 
     @Override
-    public synchronized boolean update(User user) {
-        return users.stream().anyMatch(a -> a.equals(user));
+    public boolean update(User user) {
+        users.remove(user.getId());
+        return add(user);
     }
 
     @Override
     public synchronized boolean delete(User user) {
-        return users.remove(user);
+        return users.remove(user.getId(), user);
     }
 
     @Override
     public synchronized boolean transfer(int fromId, int told, int amount) {
-        User from = getUserById(fromId);
-        User to = getUserById(told);
+        User from = users.get(fromId);
+        User to = users.get(told);
         if (from.getAmount() < amount) {
             from.changeAmount(-amount);
             to.changeAmount(amount);
@@ -42,12 +41,6 @@ public class UserStorage implements Storage {
         return false;
     }
 
-    private User getUserById(int userId) {
-        Optional<User> rsl = users.stream()
-                .filter(a -> a.getId() == userId).findFirst();
-        if (rsl.isEmpty()) {
-            throw new NoSuchElementException("User not found");
-        }
-        return rsl.get();
+    public static void main(String[] args) {
     }
 }
