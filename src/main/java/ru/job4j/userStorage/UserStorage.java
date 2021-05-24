@@ -8,20 +8,19 @@ import java.util.*;
 @ThreadSafe
 public class UserStorage implements Storage {
     @GuardedBy("this")
-    Map<Integer, User> users;
+    private final Map<Integer, User> users;
     public UserStorage(Map<Integer, User> users) {
         this.users = users;
     }
 
     @Override
     public synchronized boolean add(User user) {
-        return users.put(user.getId(), user) == null;
+        return users.putIfAbsent(user.getId(), user) == null;
     }
 
     @Override
     public boolean update(User user) {
-        users.remove(user.getId());
-        return add(user);
+        return users.replace(user.getId(), user) != null;
     }
 
     @Override
@@ -33,7 +32,8 @@ public class UserStorage implements Storage {
     public synchronized boolean transfer(int fromId, int told, int amount) {
         User from = users.get(fromId);
         User to = users.get(told);
-        if (from.getAmount() < amount) {
+
+        if (from != null && to != null && from.getAmount() < amount) {
             from.changeAmount(-amount);
             to.changeAmount(amount);
             return true;
@@ -42,5 +42,12 @@ public class UserStorage implements Storage {
     }
 
     public static void main(String[] args) {
+        Map<Integer, User> mu = new HashMap<>();
+        mu.put(1, new User(1, 100));
+        mu.put(2, new User(2, 200));
+        System.out.println(mu);
+        System.out.println(mu.replace(1, new User(3, 300)));
+        System.out.println(mu.replace(4, new User(3, 300)));
+        System.out.println(mu);
     }
 }
