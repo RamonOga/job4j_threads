@@ -25,7 +25,7 @@ public class SimpleBlockingQueue<T> {
     }
 
     public synchronized T poll() {
-        while (queue.poll() == null) {
+        while (queue.peek() == null) {
             try {
                 System.out.println("waiting..");
                 wait();
