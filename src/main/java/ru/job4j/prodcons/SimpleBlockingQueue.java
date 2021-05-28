@@ -11,10 +11,16 @@ public class SimpleBlockingQueue<T> {
 
     @GuardedBy("this")
     private final Queue<T> queue = new LinkedList<>();
+    private int size = 0;
+
+    public int size() {
+        return size;
+    }
 
     public synchronized void offer(T value) {
-        queue.offer(value);
         System.out.println("Offered..");
+        queue.offer(value);
+        size += 1;
         notifyAll();
     }
 
@@ -27,8 +33,9 @@ public class SimpleBlockingQueue<T> {
                 e.printStackTrace();
             }
         }
-        System.out.println("polling");
+        System.out.println("polling..");
         T rsl = queue.poll();
+        size -= 1;
         notifyAll();
         return rsl;
     }
