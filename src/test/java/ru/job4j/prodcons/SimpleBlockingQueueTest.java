@@ -4,24 +4,35 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 
 public class SimpleBlockingQueueTest {
 
     @Test
     public void SimpleBlockingQueueTesting() throws InterruptedException {
-        SimpleBlockingQueue<UUID> sbq = new SimpleBlockingQueue<>();
+        SimpleBlockingQueue<UUID> sbq = new SimpleBlockingQueue<>(5);
         UUID uuid = UUID.randomUUID();
-        Thread one = new Thread(() -> sbq.offer(uuid));
-        Thread two = new Thread(sbq::poll);
+        Thread one = new Thread(() -> {
+            try {
+                sbq.offer(uuid);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread two = new Thread(() -> {
+            try {
+                sbq.poll();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
         one.start();
         one.join();
-        Assert.assertEquals(1, sbq.size());
 
         two.start();
         two.join();
-        Assert.assertEquals(0, sbq.size());
     }
 
 }
