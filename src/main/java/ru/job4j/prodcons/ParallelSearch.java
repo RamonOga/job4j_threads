@@ -2,7 +2,7 @@ package ru.job4j.prodcons;
 
 public class ParallelSearch {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(5);
 
 
@@ -35,12 +35,9 @@ public class ParallelSearch {
                 }
         );
         produce.start();
-        try {
-            produce.join();
-            consumer.interrupt();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        produce.join();
+        consumer.interrupt();
+
 
 
     }
