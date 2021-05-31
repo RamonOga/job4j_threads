@@ -9,10 +9,13 @@ public class CASCount {
     private final AtomicReference<Integer> count = new AtomicReference<>();
 
     public void increment() {
-        throw new UnsupportedOperationException("Count is not impl.");
+        int tmp;
+        do {
+            tmp = count.get();
+        } while (!count.compareAndSet(tmp,tmp + 1));
     }
 
     public int get() {
-        throw new UnsupportedOperationException("Count is not impl.");
+        return count.get();
     }
 }
