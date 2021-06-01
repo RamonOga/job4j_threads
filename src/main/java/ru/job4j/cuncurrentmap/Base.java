@@ -1,5 +1,7 @@
 package ru.job4j.cuncurrentmap;
 
+import java.util.Objects;
+
 public class Base {
     private final int id;
     private final int version;
@@ -24,5 +26,18 @@ public class Base {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Base base = (Base) o;
+        return id == base.id && version == base.version && Objects.equals(name, base.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, version, name);
     }
 }
