@@ -28,7 +28,6 @@ public class ThreadPool {
     private void initThreads() throws InterruptedException {
         int size = Runtime.getRuntime().availableProcessors();
         for (int i = 0; i < size; i++) {
-            Thread.sleep(500);
             Thread thread = new Thread(new Work(tasks));
             threads.add(thread);
             thread.start();
