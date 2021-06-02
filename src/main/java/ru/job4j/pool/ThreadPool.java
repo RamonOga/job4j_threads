@@ -25,10 +25,21 @@ public class ThreadPool {
         }
     }
 
-    private void initThreads() throws InterruptedException {
+    private void initThreads() {
         int size = Runtime.getRuntime().availableProcessors();
         for (int i = 0; i < size; i++) {
-            Thread thread = new Thread(new Work(tasks));
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        while(!Thread.currentThread().isInterrupted()) {
+                            tasks.poll()
+                                    .run();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
             threads.add(thread);
             thread.start();
         }
