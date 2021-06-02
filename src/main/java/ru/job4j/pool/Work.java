@@ -13,8 +13,10 @@ public class Work implements Runnable{
     @Override
     public void run() {
         try {
-            tasks.poll()
-                    .run();
+            while(true) {
+                tasks.poll()
+                        .run();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
