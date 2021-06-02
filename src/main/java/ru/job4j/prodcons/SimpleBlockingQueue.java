@@ -20,20 +20,20 @@ public class SimpleBlockingQueue<T> {
 
     public synchronized void offer(T value) throws InterruptedException {
         while (queue.size() >= size) {
-            System.out.println("Offer waiting..");
+            System.out.println("Offer waiting.." + Thread.currentThread());
             wait();
         }
-        System.out.println("Offered..");
+        System.out.println("Offered.."+ Thread.currentThread());
         queue.offer(value);
         notifyAll();
     }
 
     public synchronized T poll() throws InterruptedException {
         while (queue.isEmpty()) {
-                System.out.println("Pooling waiting..");
+                System.out.println("Pooling waiting.." + Thread.currentThread());
                 wait();
         }
-        System.out.println("polling..");
+        System.out.println("polling.."+ Thread.currentThread());
         T rsl = queue.poll();
         notifyAll();
         return rsl;
