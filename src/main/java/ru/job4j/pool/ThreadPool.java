@@ -23,6 +23,15 @@ public class ThreadPool {
         for (Thread thread : threads) {
             thread.interrupt();
         }
+        for (Thread thread : threads) {
+            while (!(thread.getState() == Thread.State.TERMINATED)) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void initThreads() {
@@ -36,7 +45,7 @@ public class ThreadPool {
                                     .run();
                         }
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             });
