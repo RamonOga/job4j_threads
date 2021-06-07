@@ -24,7 +24,7 @@ public class ThreadPool {
             thread.interrupt();
         }
         for (Thread thread : threads) {
-            while (!(thread.getState() == Thread.State.TERMINATED)) {
+            while (thread.getState() != Thread.State.TERMINATED) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
