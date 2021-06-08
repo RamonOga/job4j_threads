@@ -12,9 +12,17 @@ public class RolColSum {
             this.rowSum = rowSum;
             this.colSum = colSum;
         }
+
+        public int getRowSum() {
+            return rowSum;
+        }
+
+        public int getColSum() {
+            return colSum;
+        }
     }
 
-    public static Sums[] sum(int[][] matrix) {
+    public Sums[] sum(int[][] matrix) {
         Sums[] rslSums = new Sums[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
             rslSums[i] = new Sums(calculateRow(matrix, i),calculateCol(matrix, i));
@@ -22,7 +30,7 @@ public class RolColSum {
         return rslSums;
     }
 
-    public static Sums[] asyncSum(int[][] matrix) throws ExecutionException, InterruptedException {
+    public Sums[] asyncSum(int[][] matrix) throws ExecutionException, InterruptedException {
         Sums[] rsl = new Sums[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
             rsl[i] = getTask(matrix, i).get();
@@ -30,12 +38,12 @@ public class RolColSum {
         return rsl;
     }
 
-    public static CompletableFuture<Sums> getTask(int[][] mat, int index) {
+    private CompletableFuture<Sums> getTask(int[][] mat, int index) {
         return CompletableFuture.supplyAsync(() -> new Sums(calculateRow(mat, index),calculateCol(mat, index)));
 
     }
 
-    private static int calculateRow(int[][] mat, int row) {
+    private int calculateRow(int[][] mat, int row) {
         int rsl = 0;
 
         for (int i = 0; i < mat[row].length; i++) {
@@ -44,7 +52,7 @@ public class RolColSum {
         return rsl;
     }
 
-    private static int calculateCol(int[][] mat, int col) {
+    private int calculateCol(int[][] mat, int col) {
         int rsl = 0;
             for (int i = 0; i < mat[col].length; i++) {
                 rsl += mat[i][col];
