@@ -15,10 +15,6 @@ public class Runner {
         Thread th1 = new Thread(cdlr);
         th1.start();
         cdl.await();
-
-
-
-
         System.out.println("doebali dikoltili");
     }
 }
