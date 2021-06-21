@@ -3,6 +3,7 @@ package org.example;
 import java.util.concurrent.CountDownLatch;
 
 public class CountDownLatchRunnable implements Runnable {
+
     CountDownLatch cdl;
 
     public CountDownLatchRunnable(CountDownLatch cdl) {
@@ -11,14 +12,31 @@ public class CountDownLatchRunnable implements Runnable {
 
     @Override
     public void run() {
-        for (int i = 0; i != 5; i++) {
+
             try {
-                Thread.sleep(1000);
+                Thread.sleep((long) (Math.random() * 10000L));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(i);
             cdl.countDown();
+        try {
+            System.out.println(Thread.currentThread().getName() + " awiat");
+            cdl.await();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        System.out.println(Thread.currentThread().getName() + " working!");
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        CountDownLatch cdl = new CountDownLatch(9);
+        for (int i = 0; i < 10; i++) {
+            Thread thread = new Thread(new CountDownLatchRunnable(cdl));
+            thread.start();
+        }
+
+
     }
 }
