@@ -4,7 +4,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class CyclicBarrierTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         CyclicBarrier barrier = new CyclicBarrier(4);
         CyclicBarrier barrierWithRun = new CyclicBarrier(3, new Runnable() {
             @Override
@@ -13,9 +13,10 @@ public class CyclicBarrierTest {
             }
         });
 
-        new Thread(ThreadFabric(barrier)).start();
-        new Thread(ThreadFabric(barrier)).start();
-        new Thread(ThreadFabric(barrier)).start();
+        for (int i = 0; i < 10; i++) {
+            new Thread(ThreadFabric(barrierWithRun)).start();
+        }
+
 
 
 
@@ -26,15 +27,15 @@ public class CyclicBarrierTest {
         return new Runnable() {
             @Override
             public void run() {
+                try {
+                    Thread.sleep((long)(Math.random() * 10000L));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("Start : " + Thread.currentThread().getName());
                 try {
                     cb.await();
                 } catch (InterruptedException | BrokenBarrierException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 System.out.println("Finish : " + Thread.currentThread().getName());
