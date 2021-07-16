@@ -1,6 +1,8 @@
 package ru.job4j.lasttask;
 
+import ru.job4j.lasttask.services.QueueService;
 import ru.job4j.lasttask.services.Service;
+import ru.job4j.lasttask.services.TopicService;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -29,7 +31,7 @@ public class PoohServer {
                         byte[] buff = new byte[1_000_000];
                         var total = input.read(buff);
                         var text = new String(Arrays.copyOfRange(buff, 0, total), StandardCharsets.UTF_8);
-                        var req = new Req(text);
+                        var req = Req.of(text);
                         var resp = modes.get(req.mode()).process(req);
                         out.write(("HTTP/1.1 " + resp.status() + " OK\r\n").getBytes());
                         out.write(resp.text().getBytes());
