@@ -471,6 +471,7 @@ ExecutorService executorservice = Executors.newWorkStealingPool(); хз попо
 
 =============================================================
 29. В чём отличие Thread от FutureTask? В чём отличие Thread.interrupt() и FutureTask.cancel().
+FutureTask Надстройка над callable uли runnable для дальнейшего отслеживания или управления.
 =============================================================
 
 

@@ -32,6 +32,20 @@ public class CountDownLatchRunnable implements Runnable {
 
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch cdl = new CountDownLatch(9);
+        Thread awaitThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("await thread start");
+                try {
+                    cdl.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("await thread finish");
+
+            }
+        });
+        awaitThread.start();
         for (int i = 0; i < 10; i++) {
             Thread thread = new Thread(new CountDownLatchRunnable(cdl));
             thread.start();

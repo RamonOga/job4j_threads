@@ -16,7 +16,7 @@ public class RunAsync {
     private static void iWork() throws InterruptedException {
         int count = 0;
         while (count < 10) {
-            System.out.println("Вы: Я работаю");
+            System.out.println("Вы: Я работаю : " + Thread.currentThread().getName());
             TimeUnit.SECONDS.sleep(1);
             count++;
         }
@@ -25,13 +25,13 @@ public class RunAsync {
     public static CompletableFuture<Void> goToTrash() {
         return CompletableFuture.runAsync(
                 () -> {
-                    System.out.println("Сын: Мам/Пам, я пошел выносить мусор");
+                    System.out.println("Сын: Мам/Пам, я пошел выносить мусор : " + Thread.currentThread().getName());
                     try {
                         TimeUnit.SECONDS.sleep(5);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("Сын: Мам/Пап, я вернулся!");
+                    System.out.println("Сын: Мам/Пап, я вернулся! : "  + Thread.currentThread().getName());
                 }
         );
     }
@@ -43,27 +43,30 @@ public class RunAsync {
     public static CompletableFuture<String> buyProduct(String product) {
         return CompletableFuture.supplyAsync(
                 () -> {
-                    System.out.println("Сын: Мам/Пам, я пошел в магазин");
+                    System.out.println("Сын: Мам/Пам, я пошел в магазин : " + Thread.currentThread().getName());
                     try {
                         TimeUnit.SECONDS.sleep(5);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("Сын: Мам/Пап, я купил " + product);
+                    System.out.println("Сын: Мам/Пап, я купил " + product + " : " + Thread.currentThread().getName());
                     return product;
                 }
         );
-    }
-    public static void supplyAsyncExample() throws Exception {
-        CompletableFuture<String> bm = buyProduct("Молоко");
-        iWork();
-        System.out.println("Куплено: " + bm.get());
     }
 
     public static void runAsyncExample() throws Exception {
         CompletableFuture<Void> gtt = goToTrash();
         iWork();
     }
+
+    public static void supplyAsyncExample() throws Exception {
+        CompletableFuture<String> bm = buyProduct("Молоко");
+        iWork();
+        System.out.println("Куплено: " + bm.get() + " : " + Thread.currentThread().getName());
+    }
+
+
 
     /**
      *
@@ -76,7 +79,7 @@ public class RunAsync {
         gtt.thenRun(() -> {
             int count = 0;
             while (count < 3) {
-                System.out.println("Сын: я мою руки");
+                System.out.println("Сын: я мою руки : " + Thread.currentThread().getName());
                 try {
                     TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
@@ -84,7 +87,7 @@ public class RunAsync {
                 }
                 count++;
             }
-            System.out.println("Сын: Я помыл руки");
+            System.out.println("Сын: Я помыл руки : " + Thread.currentThread().getName());
         });
         iWork();
     }
@@ -99,9 +102,9 @@ public class RunAsync {
      */
     public static void thenAcceptExample() throws Exception {
         CompletableFuture<String> bm = buyProduct("Молоко");
-        bm.thenAccept((product) -> System.out.println("Сын: Я убрал " + product + " в холодильник "));
+        bm.thenAccept((product) -> System.out.println("Сын: Я убрал " + product + " в холодильник : " + Thread.currentThread().getName()));
         iWork();
-        System.out.println("Куплено: " + bm.get());
+        System.out.println("Куплено: " + bm.get() + " : " + Thread.currentThread().getName());
     }
     /**
      * Пример thenApply()
@@ -113,7 +116,7 @@ public class RunAsync {
      */
     public static void thenApplyExample() throws Exception {
         CompletableFuture<String> bm = buyProduct("Молоко")
-                .thenApply((product) -> "Сын: я налил тебе в кружку " + product + ". Держи.");
+                .thenApply((product) -> "Сын: я налил тебе в кружку " + product + ". Держи. : " + Thread.currentThread().getName());
         iWork();
         System.out.println(bm.get());
     }
@@ -206,10 +209,10 @@ public class RunAsync {
         //supplyAsyncExample();
         //thenRunExample();
         //thenAcceptExample();
-        //thenApplyExample();
+        thenApplyExample();
         //thenComposeExample();
         //thenCombineExample();
         //allOfExample();
-        anyOfExample();
+        //anyOfExample();
     }
 }
